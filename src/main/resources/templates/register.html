@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travlr.</title>
+    <link rel="stylesheet" th:href="@{styles/login.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+  <h1>Travlr.</h1>
+  <h1>Adventure awaits.</h1>
+
+  <div class="container justify-content-center align-items-center">
+
+    <form class="p-4" th:object="${registerUser}" th:method="post" th:action="@{/register}">
+
+      <div class="row">
+        <div class="col-4"></div>
+        <div class="col-3">
+          <input type="text" class="form-control" id="userName" placeholder="Username" th:field="*{userName}">
+        </div>
+        <div class="col-4">
+          <small th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" th:errorclass="text-bg-danger"></small>
+        </div>
+      </div>
+
+      <div class="row pt-1">
+        <div class="col-4"></div>
+        <div class="col-3">
+          <input type="password" class="form-control" id="password" placeholder="Enter password" th:field="*{password}">
+        </div>
+        <div class="col-4">
+          <small th:if="${#fields.hasErrors('password')}" th:errors="*{password}" th:errorclass="text-bg-danger"></small>
+        </div>
+      </div>
+
+      <div class="row pt-1">
+        <div class="col-4"></div>
+        <div class="col-3">
+          <input type="password" class="form-control" id="password2" placeholder="Enter password again" th:field="*{password2}">
+        </div>
+        <div class="col-4">
+          <small th:if="${#fields.hasErrors('password2')}" th:errors="*{password2}" th:errorclass="text-bg-danger"></small>
+        </div>
+      </div>
+
+      <div class="row pt-1">
+        <div class="col-4"></div>
+        <div class="col-4">
+          <button formaction="/login" class="btn btn-secondary">Back</button>
+          <button type="submit" class="btn btn-primary">Register</button>
+        </div>
+
+      </div>
+
+    </form>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>

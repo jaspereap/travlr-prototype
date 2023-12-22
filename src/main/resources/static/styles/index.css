@@ -1,0 +1,35 @@
+body {
+  background-image: url('https://nationaltoday.com/wp-content/uploads/2021/06/Great-Outdoors-Month-1200x834.jpg');
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+  /* Initially, hide the button */
+  #fadeInButton, #fadeInFeature {
+    opacity: 0;
+  }
+  
+  /* Define a fading animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  #fadeInTitle {
+    animation: fadeIn 1.2s ease-in-out forwards;
+  }
+  /* Apply the animation to the button */
+  #fadeInButton {
+    animation: fadeIn 1.2s ease-in-out forwards;
+    animation-delay: 2s;
+  }
+  #fadeInFeature {
+    animation: fadeIn 1.2s ease-in-out forwards;
+    animation-delay: 1s;
+  }
+  
