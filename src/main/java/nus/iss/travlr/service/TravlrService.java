@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.json.JsonObject;
+import nus.iss.travlr.model.Activity;
 import nus.iss.travlr.model.Itinerary;
 import nus.iss.travlr.repository.TravlrRepository;
 
@@ -28,7 +28,8 @@ public class TravlrService {
 
     }
 
-    public void updateItinerary() {
-
+    public void addActivity(String userName, Integer iid, Activity activity) {
+        travRepo.addActivity(userName, iid, activity);
     }
+
 }

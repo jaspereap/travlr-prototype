@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travlr.</title>
+    <style>
+        body {
+            background-color: #1f2128;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div th:if="${errorMessage}" class="alert alert-info" role="alert">
+            <span th:text="${errorMessage}" class="text-white"></span>
+        </div>
+    </div>
+</body>
+</html>

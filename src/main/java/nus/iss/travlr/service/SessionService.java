@@ -23,4 +23,12 @@ public class SessionService {
     public void logoutUser(String sessId) {
         sessRepo.logoutUser(sessId);
     }
+
+    public boolean isLoggedIn(String sessId) {
+        Optional<String> optUserName = getUserName(sessId);
+        if (!optUserName.isPresent()) {
+            return false;
+        }
+        return true;
+    }
 }

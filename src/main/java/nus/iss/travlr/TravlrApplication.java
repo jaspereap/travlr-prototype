@@ -1,5 +1,7 @@
 package nus.iss.travlr;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
@@ -7,6 +9,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import jakarta.json.JsonArray;
+import nus.iss.travlr.model.Activity;
+import nus.iss.travlr.model.Itinerary;
 import nus.iss.travlr.repository.UserRepository;
 
 // Travlr - Itinerary Planning App
@@ -30,6 +35,8 @@ public class TravlrApplication implements CommandLineRunner {
 	@Autowired
 	UserRepository userRepo;
 
+	
+
 	public static void main(String[] args) {
 		SpringApplication.run(TravlrApplication.class, args);
 	}
@@ -37,14 +44,14 @@ public class TravlrApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		System.out.println("\tApplication Started");
-
-		// User user = new User();
-		// user.setUserId("1");
-		// user.setPassword("lolol");
-		// user.setUserName("jas");
-		// System.out.println(user.toString());
-
-		// System.out.println(userRepo.getUser("jas"));
+		// Itinerary iti = new Itinerary("test", "malaysia", "lolol");
+		// Activity act = new Activity("lol", LocalDateTime.now(), "www.test.com", "");
+		// iti.add(act);
+		// iti.add(act);
+		// System.out.println(iti);
+		// JsonArray jarr = iti.serializeActivity();
+		// System.out.println("Serialized jarr: " + jarr);
+		// System.out.println("Jsonobject to string: " + iti.toJsonObject());
 	}
 
 }

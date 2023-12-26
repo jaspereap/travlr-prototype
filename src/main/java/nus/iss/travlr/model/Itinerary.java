@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
+import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ public class Itinerary {
     private String country;
     private String description;
 
-    private ArrayList<String> list = new ArrayList<>();
+    private ArrayList<Activity> activityList = new ArrayList<>();
 
     public Itinerary(String name, String country, String description) {
         this.name = name;
@@ -23,18 +24,33 @@ public class Itinerary {
         this.description = description;
     }
 
+    public Itinerary(String name, String country, String description, ArrayList<Activity> activityList) {
+        this.name = name;
+        this.country = country;
+        this.description = description;
+        this.activityList = activityList;
+    }
+
     // Prototype
-    public void add(String destination) {
-        this.list.add(destination);
+    public void add(Activity destination) {
+        this.activityList.add(destination);
+    }
+
+    public JsonArray serializeActivity() {
+        JsonArrayBuilder jab = Json.createArrayBuilder();
+        for (Activity activity : activityList) {
+            jab.add(activity.toJsonObject());
+        }
+        return jab.build();
     }
 
     public JsonObject toJsonObject() {
-        JsonArray jar = Json.createArrayBuilder(list).build();
+        JsonArray jar = this.serializeActivity();
         JsonObject job = Json.createObjectBuilder()
         .add("name", name)
         .add("country", country)
         .add("description", description)
-        .add("list", jar)
+        .add("activityList", jar)
         .build();
         return job;
     }

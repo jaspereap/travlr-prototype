@@ -17,7 +17,7 @@
             <hr>
             <ul class="nav nav-pills flex-column mb-auto">
               <li class="nav-item">
-                <a th:href="@{/home}" class="nav-link active" aria-current="page">
+                <a th:href="@{/home}" class="nav-link text-white">
                   Dashboard
                 </a>
               </li>
@@ -31,6 +31,7 @@
               </a>
               <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
                 <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#newItineraryForm">New itinerary...</button></li>
+                <li><a class="dropdown-item" href="#">Settings</a></li>
                 <li><a class="dropdown-item" href="#">Profile</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" th:href="@{/logout}">Sign out</a></li>
@@ -38,50 +39,18 @@
             </div>
         </div>
 
-        <!-- Empty Itinerary -->
-        <div th:if="${itineraries == null || itineraries.size == 0}">
-
-          <div class="cover-container d-flex w-100 h-100 p-3 mx-auto row">
-  
-            <main class="px-3">
-              <h1>Looking kinda empty here.</h1>
-              <p class="lead">Start by adding an itinerary</p>
-            </main>
-
-          </div>
-
+        <div th:object="${itinerary}">
+            <div th:text="*{name}"></div>
+            <div th:text="*{country}"></div>
+            <div th:text="*{description}"></div>
+            <div th:if="${itinerary.getActivityList.size == 0}">Your activity list is empty..</div>
+            <div th:unless="${itinerary.getActivityList.size == 0}" th:text="${itinerary.getActivityList}"></div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newActivityForm">Add</button>
         </div>
-        <!-- Empty Itinerary -->
-
-        <div class="ms-1 mt-1 container-fluid">
-
-          <div th:each="iti, iterStat : ${itineraries}">
-
-            <div class="card mb-3" style="max-width: 540px;">
-              <div class="row g-0">
-                <div class="col-md-4">
-                  <img src="https://images.pexels.com/photos/1905054/pexels-photo-1905054.jpeg?cs=srgb&dl=pexels-loc-dang-1905054.jpg&fm=jpg" class="img-fluid rounded-start" alt="...">
-                </div>
-                <div class="col-md-8">
-                  <div class="card-body">
-                    <h5 class="card-title" th:text="${iti.name}">Card title</h5>
-                    <p class="card-text" th:text="${iti.description}"></p>
-                    <p class="card-text"><small class="text-body-secondary" th:text="${iti.country}"></small></p>
-                    <a th:href="@{'/itinerary/' + ${user.getUserName}} + '/' + ${iterStat.index}" class="stretched-link"></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-
 
     </main>
 
-<!-- Modal -->
+<!-- Modal for itinerary form -->
 <div class="modal fade" id="newItineraryForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -112,7 +81,42 @@
 
       </div>
     </div>
-  </div>
+</div>
+<!-- Modal for activity form -->
+<div class="modal fade" id="newActivityForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">New Activity</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form th:method="post" th:action="@{'/itinerary/' + ${user.getUserName}} + '/' + ${iid} + '/add'">
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="input-group mb-1">
+                        <span class="input-group-text">Location</span>
+                        <input type="text" name="location" class="form-control">
+                    </div>
+                    <div class="input-group mb-1">
+                        <span class="input-group-text">Date</span>
+                        <input type="datetime" name="datetime" class="form-control">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text">Image Url</span>
+                        <input name="image" class="form-control"></input>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </div>
+        </form>
+
+      </div>
+    </div>
+</div>
   
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
