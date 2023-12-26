@@ -1,27 +1,23 @@
 package nus.iss.travlr.controller;
 
-import java.lang.reflect.Field;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 import nus.iss.travlr.model.RegisterUser;
 import nus.iss.travlr.model.User;
 import nus.iss.travlr.service.AccountService;
+import nus.iss.travlr.service.SessionService;
 
 @Controller
 @RequestMapping
@@ -29,6 +25,8 @@ public class AccountController {
 
     @Autowired
     private AccountService accSvc;
+    @Autowired
+    private SessionService sessSvc;
 
     @GetMapping(path = "/login")
     public String getLogin(Model model) {
@@ -38,9 +36,40 @@ public class AccountController {
     }
 
     @PostMapping(path = "/login")
-    public String postLogin(@ModelAttribute User user) {
-        System.out.println(user);
-        return "login";
+    public String postLogin(@Valid @ModelAttribute User user, BindingResult result, HttpSession session) {
+        System.out.println("Post Login for: " + user);
+        if (result.hasErrors()) {
+            return "login";
+        }
+    
+        if (!accSvc.hasUser(user.getUserName())) {
+            System.out.println("USER DOESN'T EXISTS!");
+            FieldError err = new FieldError("user", "userName", "Login failed!");
+            result.addError(err);
+            return "login";
+        }
+
+        if (!accSvc.isValidUser(user.getUserName(), user.getPassword())) {
+            FieldError err = new FieldError("user", "userName", "Login failed!");
+            result.addError(err);
+            System.out.println("Login failed");
+            return "login";
+        }
+
+        System.out.println("Login success");
+        User retrievedUser = accSvc.getUser(user.getUserName());
+        System.out.println("Session id: " + session.getId());
+        System.out.println("User id: " + retrievedUser.getUserId());
+        sessSvc.loginUser(session.getId(), retrievedUser.getUserName());
+        return "redirect:/home";
+    }
+
+    @GetMapping(path = "/logout")
+    public String getLogout(HttpSession session, RedirectAttributes redirectAttributes) {
+        String sessId = session.getId();
+        sessSvc.logoutUser(sessId);
+        redirectAttributes.addFlashAttribute("message", "Logged out successfully.");
+        return "redirect:/";
     }
 
     @GetMapping(path = "/register")
@@ -50,35 +79,30 @@ public class AccountController {
     }
 
     @PostMapping(path = "/register")
-    public ModelAndView postRegister(@Valid @ModelAttribute RegisterUser registerUser, BindingResult result, RedirectAttributes redirectAttributes) {
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("register");
+    public String postRegister(@Valid @ModelAttribute RegisterUser registerUser, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
 
         if (result.hasErrors()) {
-            mav.setStatus(HttpStatus.BAD_REQUEST);
-            return mav;
+            return "register";
         }
 
         if (!accSvc.validPassword(registerUser.getPassword(), registerUser.getPassword2())) {
-            mav.setStatus(HttpStatus.BAD_REQUEST);
             FieldError err = new FieldError("registerUser", "password2", "Passwords do not match.");
             result.addError(err);
-            return mav;
+
+            return "register";
         }
 
-        if (accSvc.userExists(registerUser.getUserName())) {
-            mav.setStatus(HttpStatus.BAD_REQUEST);
+        if (accSvc.hasUser(registerUser.getUserName())) {
             FieldError err = new FieldError("registerUser", "userName", "This username has been used!");
             result.addError(err);
-            return mav;
+
+            return "register";
         }
 
         accSvc.register(registerUser);
-        ModelAndView redirectMav = new ModelAndView("redirect:/login");
-        redirectMav.setStatus(HttpStatus.SEE_OTHER);
-        // redirectMav.addObject("message", "You have registered successfully!"); // Success message
-        // redirectMav.addObject("user", new User());
-        
-        return redirectMav;
+
+        redirectAttributes.addFlashAttribute("message", "You have registered successfully!");
+        model.addAttribute("user", new User());
+        return "redirect:/login";
     }
 }

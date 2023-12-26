@@ -7,7 +7,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import nus.iss.travlr.model.User;
 import nus.iss.travlr.repository.UserRepository;
 
 // Travlr - Itinerary Planning App

@@ -32,11 +32,14 @@ public class UserRepository {
         String userId = userJObject.getString("userId", "NULL");
         String userName = userJObject.getString("userName", "NULL");
         String password = userJObject.getString("password", "NULL");
-        return new User(userId, userName, password);
+        User output = new User(userId, userName, password);
+        // Debug
+        System.out.println("Retrieved User: " + output);
+        return output;
     }
 
     public void addUser(User user) {
-        template.opsForHash().put(key, user.getUserName(), user.toString());
+        template.opsForHash().put(key, user.getUserName(), user.toJsonObject().toString());
     }
 
     public boolean delUser(String hashKey) {
