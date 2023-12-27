@@ -69,7 +69,7 @@
                     <input type="text" class="form-control" placeholder="Address" name="address" id="location-input" th:field="*{address}">
                 </div>
                 <div class="input-group mb-2">
-                    <input type="datetime-local" class="form-control" placeholder="Date" name="datetime" th:field="*{dateTime}">
+                    <input type="datetime-local" class="form-control" placeholder="Date" name="datetime" th:field="*{dateTime}" required>
                 </div>
                 <div class="input-group mb-2">
                     <input type="text" class="form-control" placeholder="Image URL" name="image" th:field="*{image}">
@@ -77,7 +77,9 @@
                 <div class="input-group mb-2">
                     <textarea type="text" class="form-control" placeholder="Remarks" name="remarks" th:field="*{remarks}"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Create</button>
+                <a th:href="@{'/itinerary/'+${user.getUserName}}+'/'+${iid}" class="btn btn-outline-danger">Cancel</a>
+                <button type="submit" class="btn btn-primary" th:if="${aid == null}">Create</button>
+                <button type="submit" class="btn btn-primary" th:if="${aid != null}">Confirm changes</button>
             </form>
           </div>
           <gmp-map slot="main">
