@@ -13,6 +13,7 @@ import jakarta.json.JsonArray;
 import nus.iss.travlr.model.Activity;
 import nus.iss.travlr.model.Itinerary;
 import nus.iss.travlr.repository.UserRepository;
+import nus.iss.travlr.service.TravlrService;
 
 // Travlr - Itinerary Planning App
 // Key Functions:
@@ -35,6 +36,8 @@ public class TravlrApplication implements CommandLineRunner {
 	@Autowired
 	UserRepository userRepo;
 
+	@Autowired
+	TravlrService travSvc;
 	
 
 	public static void main(String[] args) {
@@ -44,14 +47,7 @@ public class TravlrApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		System.out.println("\tApplication Started");
-		// Itinerary iti = new Itinerary("test", "malaysia", "lolol");
-		// Activity act = new Activity("lol", LocalDateTime.now(), "www.test.com", "");
-		// iti.add(act);
-		// iti.add(act);
-		// System.out.println(iti);
-		// JsonArray jarr = iti.serializeActivity();
-		// System.out.println("Serialized jarr: " + jarr);
-		// System.out.println("Jsonobject to string: " + iti.toJsonObject());
+		// travSvc.getGeocode("causeway point");
 	}
 
 }

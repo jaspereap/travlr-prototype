@@ -1,0 +1,83 @@
+{
+    "results": [
+        {
+            "address_components": [
+                {
+                    "long_name": "1",
+                    "short_name": "1",
+                    "types": [
+                        "street_number"
+                    ]
+                },
+                {
+                    "long_name": "Woodlands Square",
+                    "short_name": "Woodlands Square",
+                    "types": [
+                        "route"
+                    ]
+                },
+                {
+                    "long_name": "Woodlands",
+                    "short_name": "Woodlands",
+                    "types": [
+                        "neighborhood",
+                        "political"
+                    ]
+                },
+                {
+                    "long_name": "Singapore",
+                    "short_name": "Singapore",
+                    "types": [
+                        "locality",
+                        "political"
+                    ]
+                },
+                {
+                    "long_name": "Singapore",
+                    "short_name": "SG",
+                    "types": [
+                        "country",
+                        "political"
+                    ]
+                },
+                {
+                    "long_name": "738099",
+                    "short_name": "738099",
+                    "types": [
+                        "postal_code"
+                    ]
+                }
+            ],
+            "formatted_address": "1 Woodlands Square, Singapore 738099",
+            "geometry": {
+                "location": {
+                    "lat": 1.4360933,
+                    "lng": 103.7859471
+                },
+                "location_type": "ROOFTOP",
+                "viewport": {
+                    "northeast": {
+                        "lat": 1.437214280291502,
+                        "lng": 103.7873142302915
+                    },
+                    "southwest": {
+                        "lat": 1.434516319708498,
+                        "lng": 103.7846162697085
+                    }
+                }
+            },
+            "partial_match": true,
+            "place_id": "ChIJg0iEvagT2jERLpza72gaJ08",
+            "plus_code": {
+                "compound_code": "CQPP+C9 Singapore",
+                "global_code": "6PH5CQPP+C9"
+            },
+            "types": [
+                "establishment",
+                "point_of_interest",
+                "shopping_mall"
+            ]
+        }
+    ],
+    "status": "OK"
+}

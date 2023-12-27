@@ -24,6 +24,7 @@ public class TravlrRepository {
     @Autowired @Qualifier("redisTemplate")
     private RedisTemplate<String, String> template;
 
+    // Add a new itinerary with empty activity
     public void addItinerary(String userName, Itinerary itinerary) {
         // get current itinerary
         Optional<List<Itinerary>> optItineraryList = this.getItinerary(userName);
@@ -49,6 +50,7 @@ public class TravlrRepository {
         }
     }
 
+    // Retrieve all itineraries from a user
     public Optional<List<Itinerary>> getItinerary(String userName) {
         String retrievedItinerary = (String) template.opsForHash().get("main", userName);
         if (retrievedItinerary == null) {
@@ -59,21 +61,27 @@ public class TravlrRepository {
         List<Itinerary> itineraryList = new ArrayList<>();
         for (JsonValue val : itineraryArray) {
             JsonObject itineraryObject = val.asJsonObject();
+            // Itinerary Properties
             String name = itineraryObject.getString("name");
             String country = itineraryObject.getString("country");
             String description = itineraryObject.getString("description");
-            // 
-
             JsonArray activityArray = itineraryObject.getJsonArray("activityList");
             ArrayList<Activity> activityList = new ArrayList<>();
                 for (JsonValue val2 : activityArray) {
+                    // Activity Properties
                     JsonObject activityObject = val2.asJsonObject();
                     String location = activityObject.getString("location");
+                    String address = activityObject.getString("address");
                     String dateTime = activityObject.getString("dateTime");
                     String image = activityObject.getString("image", "");
-                    activityList.add(new Activity(location, LocalDateTime.parse(dateTime), image, image));
+                    String remarks = activityObject.getString("remarks", "");
+                    String lat = activityObject.getString("lat", "");
+                    String lng = activityObject.getString("lng", "");
+                    String formatted_address = activityObject.getString("formatted_address", "");
+                    String place_id = activityObject.getString("place_id", "");
+                    Activity activity = new Activity(location, address, LocalDateTime.parse(dateTime), image, remarks, lat, lng, formatted_address, place_id);
+                    activityList.add(activity);
                 }
-
             itineraryList.add(new Itinerary(name, country, description, activityList));
         }
         return Optional.of(itineraryList);
@@ -93,6 +101,8 @@ public class TravlrRepository {
             jab.add(iti.toJsonObject());
         }
         JsonArray jarr = jab.build();
+        // Debug
+        System.out.println("Packed Activity Array: " + jarr);
         template.opsForHash().put("main", userName, jarr.toString());
     }
 }

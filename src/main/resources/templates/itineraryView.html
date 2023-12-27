@@ -4,13 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Travlr.</title>
-    <link rel="stylesheet" href="styles/home.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/map.css}" />
+    <script type="module" th:src="@{/scripts/map.js}"></script>
+    <style>
+      .card-img-top {
+        width: 100%;
+        height: 10vw;
+        object-fit: cover;
+      }
+    </style>
+    <!-- Google Maps API script -->
+    <script type="module" th:inline="javascript">
+      /*<![CDATA[*/
+      let map;
+      var latitude = parseFloat(/*[[${itinerary.activityList[0].lat}]]*/);
+      var longitude = parseFloat(/*[[${itinerary.activityList[0].lng}]]*/);
+      console.log("camera position", latitude , longitude);
+      async function initMap() {
+
+        const position = { lat: latitude, lng: longitude };
+
+        const { Map } = await google.maps.importLibrary("maps");
+        const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
+        map = new Map(document.getElementById("map"), {
+          zoom: 11,
+          center: position,
+          mapId: "DEMO_MAP_ID",
+          streetViewControl: false,
+          zoomControl: true,
+          zoomControlOptions: {
+            position: google.maps.ControlPosition.LEFT_CENTER,
+          },
+        });
+
+        const bounds = new google.maps.LatLngBounds();
+        // Iterate each activity for their position
+        /*[# th:each="activity : ${itinerary.getActivityList}"]*/
+        {
+          const pos = {
+            lat: parseFloat(/*[[${activity.lat}]]*/),
+            lng: parseFloat(/*[[${activity.lng}]]*/)
+          };
+          placeMarker(/*[[${activity.location}]]*/"name", pos);
+          bounds.extend(new google.maps.LatLng(pos.lat, pos.lng));
+        }
+        /*[/]*/
+        function placeMarker(name, marker_position) {
+          const marker = new AdvancedMarkerElement({
+            map: map,
+            position: marker_position,
+            title: name,
+          });
+        }
+        map.fitBounds(bounds);  
+      }
+      
+      initMap();
+      /*]]>*/
+    </script>
+    <!-- / Google Maps API script -->
 </head>
 <body>
+    <!-- <div th:each="x : ${itinerary.getActivityList}" th:text="${x.lat}"></div> -->
+
     <main class="d-flex">
-        <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark min-vh-100" style="width: 280px;">
-            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+      <!-- Side Navigation Bar -->
+        <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark min-vh-100" style="width: 280px; position: fixed; left: 0px; right: 0px;">
+            <a th:href="@{/home}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
               <svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
               <span class="fs-4">Travlr.</span>
             </a>
@@ -38,14 +100,55 @@
               </ul>
             </div>
         </div>
+        <!-- / Side Navigation Bar -->
+        
+        <!-- Main Content -->
+        <div class="container-fluid" style="margin-left: 280px;">
+          <div th:object="${itinerary}">
+              <div class="m-3">
+                <h1 th:text="*{name}"></h1>
+                <small th:text="*{country}" class="ps-1"></small>
+              </div>
 
-        <div th:object="${itinerary}">
-            <div th:text="*{name}"></div>
-            <div th:text="*{country}"></div>
-            <div th:text="*{description}"></div>
-            <div th:if="${itinerary.getActivityList.size == 0}">Your activity list is empty..</div>
-            <div th:unless="${itinerary.getActivityList.size == 0}" th:text="${itinerary.getActivityList}"></div>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newActivityForm">Add</button>
+              <h3 th:text="*{description}" class="m-3"></h3>
+              <div th:if="${itinerary.getActivityList.size == 0}" class="m-3">Your activity list is empty..</div>
+              <a class="btn btn-primary m-3" th:href="@{'/itinerary/' + ${user.getUserName}} + '/' + ${iid} + '/add'">Add</a>
+            </div>
+            
+          <div th:unless="${itinerary.getActivityList.size == 0}" th:each="activity: ${itinerary.getActivityList}" class="m-3">
+            <!-- Row -->
+            <div class="row">
+              <div class="col-lg-3 p-0">
+                <div class="card h-100 text-center">
+                  <div class="card-body">
+                    <h2 class="card-text card-details" th:text="${#temporals.dayOfWeekNameShort(activity.dateTime)}">Card title</h2>
+                    <h4 class="card-text card-details"><span th:text="|${#temporals.hour(activity.dateTime)}:${#temporals.minute(activity.dateTime)}|"></span></h4>
+                    <h4 class="card-title" th:text="${#temporals.format(activity.dateTime, 'dd-MM-yyyy')}">Card title</h4>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-9 p-0">
+                <div class="card mb-3 h-100">
+                  <img th:if="${activity.image}" th:src="@{${activity.image}}" class="card-img-top img-fluid" style="height: 150px; width: 100%;" alt="">
+                  <div class="card-body">
+                    <h5 class="card-title" th:text="${activity.location}">Card title</h5>
+                    <p class="card-text" th:text="${activity.remarks}">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                    <p class="card-text"><small class="text-body-secondary" th:text="${activity.formatted_address}">Last updated 3 mins ago</small></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /Row -->
+          </div>
+        <!-- / Main Content -->
+
+        <!-- Map Content -->
+          <div id="map" class="p-3 mb-2">
+            <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
+              ({key: "AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg", v: "weekly"});</script>
+          </div>
+        <!-- / Map Content -->
+
         </div>
 
     </main>
@@ -82,41 +185,7 @@
       </div>
     </div>
 </div>
-<!-- Modal for activity form -->
-<div class="modal fade" id="newActivityForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="staticBackdropLabel">New Activity</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
 
-        <form th:method="post" th:action="@{'/itinerary/' + ${user.getUserName}} + '/' + ${iid} + '/add'">
-            <div class="modal-body">
-                <div class="container-fluid">
-                    <div class="input-group mb-1">
-                        <span class="input-group-text">Location</span>
-                        <input type="text" name="location" class="form-control">
-                    </div>
-                    <div class="input-group mb-1">
-                        <span class="input-group-text">Date</span>
-                        <input type="datetime" name="datetime" class="form-control">
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-text">Image Url</span>
-                        <input name="image" class="form-control"></input>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Create</button>
-                </div>
-            </div>
-        </form>
-
-      </div>
-    </div>
-</div>
   
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>

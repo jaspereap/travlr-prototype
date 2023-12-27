@@ -1,88 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travlr.</title>
-    <link rel="stylesheet" href="styles/home.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travlr.</title>
+  <link rel="stylesheet" href="styles/home.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
+
 <body>
-    <main class="d-flex">
-        <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark min-vh-100" style="width: 280px;">
-            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-              <svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
-              <span class="fs-4">Travlr.</span>
-            </a>
-            <hr>
-            <ul class="nav nav-pills flex-column mb-auto">
-              <li class="nav-item">
-                <a th:href="@{/home}" class="nav-link active" aria-current="page">
-                  Dashboard
-                </a>
-              </li>
+  <main class="d-flex">
+    <!-- Side Navigation Bar -->
+    <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark min-vh-100" style="width: 280px; position: fixed; left: 0px; right: 0px;">
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+        <svg class="bi pe-none me-2" width="40" height="32">
+          <use xlink:href="#bootstrap" />
+        </svg>
+        <span class="fs-4">Travlr.</span>
+      </a>
+      <hr>
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <a th:href="@{/home}" class="nav-link active" aria-current="page">
+            Dashboard
+          </a>
+        </li>
+      </ul>
+      <hr>
+      <div class="dropdown">
+        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+          data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="https://avatars.githubusercontent.com/u/117494437?s=96&v=4" alt="" width="32" height="32"
+            class="rounded-circle me-2">
+          <strong><span th:text="${user.getUserName}"></span></strong>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+          <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#newItineraryForm">New
+              itinerary...</button></li>
+          <li><a class="dropdown-item" href="#">Profile</a></li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+          <li><a class="dropdown-item" th:href="@{/logout}">Sign out</a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- / Side Navigation Bar -->
 
-            </ul>
-            <hr>
-            <div class="dropdown">
-              <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="https://avatars.githubusercontent.com/u/117494437?s=96&v=4" alt="" width="32" height="32" class="rounded-circle me-2">
-                <strong><span th:text="${user.getUserName}"></span></strong>
-              </a>
-              <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#newItineraryForm">New itinerary...</button></li>
-                <li><a class="dropdown-item" href="#">Profile</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" th:href="@{/logout}">Sign out</a></li>
-              </ul>
-            </div>
-        </div>
+    
+    <!-- Main Content -->
+    <div class="mt-1 container-fluid" style="margin-left: 280px;">
 
-        <!-- Empty Itinerary -->
-        <div th:if="${itineraries == null || itineraries.size == 0}">
-
-          <div class="cover-container d-flex w-100 h-100 p-3 mx-auto row">
+      <!-- Empty Itinerary -->
+      <div th:if="${itineraries == null || itineraries.size == 0}">
   
-            <main class="px-3">
-              <h1>Looking kinda empty here.</h1>
-              <p class="lead">Start by adding an itinerary</p>
-            </main>
-
-          </div>
-
+        <div class="cover-container d-flex w-100 h-100 p-3 mx-auto row">
+  
+          <main class="px-3">
+            <h1>Looking kinda empty here.</h1>
+            <p class="lead">Start by adding an itinerary</p>
+          </main>
+  
         </div>
-        <!-- Empty Itinerary -->
+  
+      </div>
+      <!-- Empty Itinerary -->
 
-        <div class="ms-1 mt-1 container-fluid">
-
-          <div th:each="iti, iterStat : ${itineraries}">
-
-            <div class="card mb-3" style="max-width: 540px;">
-              <div class="row g-0">
-                <div class="col-md-4">
-                  <img src="https://images.pexels.com/photos/1905054/pexels-photo-1905054.jpeg?cs=srgb&dl=pexels-loc-dang-1905054.jpg&fm=jpg" class="img-fluid rounded-start" alt="...">
-                </div>
-                <div class="col-md-8">
-                  <div class="card-body">
-                    <h5 class="card-title" th:text="${iti.name}">Card title</h5>
-                    <p class="card-text" th:text="${iti.description}"></p>
-                    <p class="card-text"><small class="text-body-secondary" th:text="${iti.country}"></small></p>
-                    <a th:href="@{'/itinerary/' + ${user.getUserName}} + '/' + ${iterStat.index}" class="stretched-link"></a>
-                  </div>
-                </div>
+      <div th:each="iti, iterStat : ${itineraries}">
+        <div class="card mb-3" style="max-width: 540px;">
+          <div class="row g-0">
+            <div class="col-md-4">
+              <img
+                src="https://images.pexels.com/photos/1905054/pexels-photo-1905054.jpeg?cs=srgb&dl=pexels-loc-dang-1905054.jpg&fm=jpg"
+                class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title" th:text="${iti.name}">Card title</h5>
+                <p class="card-text" th:text="${iti.description}"></p>
+                <p class="card-text"><small class="text-body-secondary" th:text="${iti.country}"></small></p>
+                <a th:href="@{'/itinerary/' + ${user.getUserName}} + '/' + ${iterStat.index}"
+                  class="stretched-link"></a>
               </div>
             </div>
-
           </div>
-
         </div>
+      </div>
+    </div>
+    <!-- / Main Content -->
+  </main>
 
-
-
-    </main>
-
-<!-- Modal -->
-<div class="modal fade" id="newItineraryForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <!-- Modal -->
+  <div class="modal fade" id="newItineraryForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -91,29 +103,32 @@
         </div>
 
         <form th:method="post" th:action="@{/create}">
-            <div class="modal-body">
-                <div class="input-group mb-1">
-                    <span class="input-group-text">Name</span>
-                    <input type="text" name="name" class="form-control">
-                </div>
-                <div class="input-group mb-1">
-                    <span class="input-group-text">Country</span>
-                    <input type="text" name="country" class="form-control">
-                </div>
-                <div class="input-group">
-                    <span class="input-group-text">Description</span>
-                    <textarea name="description" class="form-control"></textarea>
-                </div>
+          <div class="modal-body">
+            <div class="input-group mb-1">
+              <span class="input-group-text">Name</span>
+              <input type="text" name="name" class="form-control">
             </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Create</button>
+            <div class="input-group mb-1">
+              <span class="input-group-text">Country</span>
+              <input type="text" name="country" class="form-control">
             </div>
+            <div class="input-group">
+              <span class="input-group-text">Description</span>
+              <textarea name="description" class="form-control"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Create</button>
+          </div>
         </form>
 
       </div>
     </div>
   </div>
-  
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
 </body>
+
 </html>

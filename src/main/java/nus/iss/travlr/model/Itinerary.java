@@ -36,16 +36,17 @@ public class Itinerary {
         this.activityList.add(destination);
     }
 
-    public JsonArray serializeActivity() {
+    public JsonArray activityToJsonArray() {
         JsonArrayBuilder jab = Json.createArrayBuilder();
         for (Activity activity : activityList) {
             jab.add(activity.toJsonObject());
         }
-        return jab.build();
+        JsonArray activityJsonArray = jab.build();
+        return activityJsonArray;
     }
 
     public JsonObject toJsonObject() {
-        JsonArray jar = this.serializeActivity();
+        JsonArray jar = this.activityToJsonArray();
         JsonObject job = Json.createObjectBuilder()
         .add("name", name)
         .add("country", country)
