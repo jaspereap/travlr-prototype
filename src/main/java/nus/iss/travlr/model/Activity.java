@@ -1,6 +1,7 @@
 package nus.iss.travlr.model;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Activity {
+    private String id;
     // From Form
     private String location;
     private String address;
@@ -33,8 +35,13 @@ public class Activity {
         this.remarks = remarks;
     }
 
+    public void initialiseId() {
+        this.id = UUID.randomUUID().toString();
+    }
+
     public JsonObject toJsonObject() {
         JsonObject job = Json.createObjectBuilder()
+        .add("id", id)
         // From Form
         .add("location", location)
         .add("address", address)

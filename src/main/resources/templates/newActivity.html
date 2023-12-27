@@ -55,23 +55,27 @@
           <div class="panel" slot="fixed">
             <div>
               <img class="sb-title-icon" src="https://fonts.gstatic.com/s/i/googlematerialicons/location_pin/v5/24px.svg" alt="">
-              <span class="sb-title">Address Selection</span>
+              <h1 class="sb-title mb-2" th:if="${aid == null}">Address Selection</h1>
+              <h1 class="mb-2" th:if="${aid != null}">Editing activity</h1>
             </div>
-            <form th:action="@{'/itinerary/' + ${user.getUserName}} + '/' + ${iid} + '/add'" th:method="post">
-                <div class="input-group mb-2">
-                    <input type="text" class="form-control" placeholder="Location Name" name="location">
+            <form th:action="@{'/itinerary/' + ${user.getUserName}} + '/' + ${iid} + '/add'" th:method="post" th:object="${activity}">
+                <div class="input-group mb-2" th:if="${aid != null}">
+                  <input type="text" class="form-control" th:value="${aid}" name="aid" hidden>
                 </div>
                 <div class="input-group mb-2">
-                    <input type="text" class="form-control" placeholder="Address" name="address" id="location-input">
+                    <input type="text" class="form-control" placeholder="Location Name" name="location" th:field="*{location}">
                 </div>
                 <div class="input-group mb-2">
-                    <input type="datetime-local" class="form-control" placeholder="Date" name="datetime">
+                    <input type="text" class="form-control" placeholder="Address" name="address" id="location-input" th:field="*{address}">
                 </div>
                 <div class="input-group mb-2">
-                    <input type="text" class="form-control" placeholder="Image URL" name="image">
+                    <input type="datetime-local" class="form-control" placeholder="Date" name="datetime" th:field="*{dateTime}">
                 </div>
                 <div class="input-group mb-2">
-                    <textarea type="text" class="form-control" placeholder="Remarks" name="remarks"></textarea>
+                    <input type="text" class="form-control" placeholder="Image URL" name="image" th:field="*{image}">
+                </div>
+                <div class="input-group mb-2">
+                    <textarea type="text" class="form-control" placeholder="Remarks" name="remarks" th:field="*{remarks}"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Create</button>
             </form>

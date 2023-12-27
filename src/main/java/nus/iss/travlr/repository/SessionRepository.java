@@ -18,7 +18,7 @@ public class SessionRepository {
     private String SESSION_KEY;
 
     public void loginUser(String key, String value) {
-        System.out.println("Adding user session");
+        System.out.println("\tNew Login, Adding user session");
         template.opsForHash().put(SESSION_KEY, key, value);
     }
 

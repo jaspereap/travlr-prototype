@@ -8,11 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import jakarta.json.Json;
-import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
 import jakarta.json.JsonReader;
@@ -39,12 +37,17 @@ public class TravlrService {
         return optItineraryList;
     }
 
-    public void deleteItinerary() {
-
+    public void deleteItinerary(String userName, Integer iid) {
+        travRepo.deleteItinerary(userName, iid);
     }
 
     public void addActivity(String userName, Integer iid, Activity activity) {
         travRepo.addActivity(userName, iid, activity);
+    }
+
+    public void updateActivity(String userName, Integer iid, String aid, Activity activity ) {
+        Activity populatedActivity = this.populateExistingActivity(aid, activity);
+        travRepo.updateActivity(userName, iid, aid, populatedActivity);
     }
 
     public JsonObject getAddressDetails(String address) {
@@ -88,4 +91,49 @@ public class TravlrService {
 
         return compiled;
     }
+
+    public Activity populateNewActivity(Activity activity) {
+        // Add new activity
+        activity.initialiseId();
+        String address = activity.getAddress();
+        // Call API with address
+        JsonObject response = this.getAddressDetails(address);
+        if (response == null) {
+            // Debug
+            System.out.println("API call failed");
+            return activity;
+        }
+        String lat = response.getString("lat");
+        String lng = response.getString("lng");
+        String formatted_address = response.getString("formatted_address");
+        String place_id = response.getString("place_id");
+        activity.setLat(lat);
+        activity.setLng(lng);
+        activity.setFormatted_address(formatted_address);
+        activity.setPlace_id(place_id);
+        return activity;
+    }
+
+    public Activity populateExistingActivity(String aid, Activity activity) {
+        // Add new activity
+        activity.setId(aid);
+        String address = activity.getAddress();
+        // Call API with address
+        JsonObject response = this.getAddressDetails(address);
+        if (response == null) {
+            // Debug
+            System.out.println("API call failed");
+            return activity;
+        }
+        String lat = response.getString("lat");
+        String lng = response.getString("lng");
+        String formatted_address = response.getString("formatted_address");
+        String place_id = response.getString("place_id");
+        activity.setLat(lat);
+        activity.setLng(lng);
+        activity.setFormatted_address(formatted_address);
+        activity.setPlace_id(place_id);
+        return activity;
+    }
+
 }

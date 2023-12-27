@@ -33,8 +33,6 @@ public class UserRepository {
         String userName = userJObject.getString("userName", "NULL");
         String password = userJObject.getString("password", "NULL");
         User output = new User(userId, userName, password);
-        // Debug
-        System.out.println("Retrieved User: " + output);
         return output;
     }
 

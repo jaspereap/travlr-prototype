@@ -37,7 +37,6 @@ public class AccountController {
 
     @PostMapping(path = "/login")
     public String postLogin(@Valid @ModelAttribute User user, BindingResult result, HttpSession session) {
-        System.out.println("Post Login for: " + user);
         if (result.hasErrors()) {
             return "login";
         }
@@ -52,14 +51,14 @@ public class AccountController {
         if (!accSvc.isValidUser(user.getUserName(), user.getPassword())) {
             FieldError err = new FieldError("user", "userName", "Login failed!");
             result.addError(err);
-            System.out.println("Login failed");
+            System.out.println("\tLogin failed");
             return "login";
         }
 
-        System.out.println("Login success");
+        System.out.println("\tLogin success");
         User retrievedUser = accSvc.getUser(user.getUserName());
-        System.out.println("Session id: " + session.getId());
-        System.out.println("User id: " + retrievedUser.getUserId());
+        System.out.println("\tLogin Session id: " + session.getId());
+        System.out.println("\tLogin User id: " + retrievedUser.getUserId());
         sessSvc.loginUser(session.getId(), retrievedUser.getUserName());
         return "redirect:/home";
     }

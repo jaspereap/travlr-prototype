@@ -15,7 +15,7 @@
       }
     </style>
     <!-- Google Maps API script -->
-    <script type="module" th:inline="javascript">
+    <script type="module" th:inline="javascript" th:unless="${itinerary.getActivityList.size == 0}">
       /*<![CDATA[*/
       let map;
       var latitude = parseFloat(/*[[${itinerary.activityList[0].lat}]]*/);
@@ -115,15 +115,22 @@
               <a class="btn btn-primary m-3" th:href="@{'/itinerary/' + ${user.getUserName}} + '/' + ${iid} + '/add'">Add</a>
             </div>
             
-          <div th:unless="${itinerary.getActivityList.size == 0}" th:each="activity: ${itinerary.getActivityList}" class="m-3">
+          <div th:unless="${itinerary.getActivityList.size == 0}" th:each="activity, iterStat: ${itinerary.getActivityList}" class="m-3">
             <!-- Row -->
-            <div class="row">
+            <div class="row row-cols-1">
               <div class="col-lg-3 p-0">
-                <div class="card h-100 text-center">
+                <div class="card rounded h-100 text-center">
+                  <div class="card-header py-3">
+                    <h4 class="card-text" th:text="${#temporals.dayOfWeekNameShort(activity.dateTime)}">Card title</h4>
+                  </div>
                   <div class="card-body">
-                    <h2 class="card-text card-details" th:text="${#temporals.dayOfWeekNameShort(activity.dateTime)}">Card title</h2>
-                    <h4 class="card-text card-details"><span th:text="|${#temporals.hour(activity.dateTime)}:${#temporals.minute(activity.dateTime)}|"></span></h4>
-                    <h4 class="card-title" th:text="${#temporals.format(activity.dateTime, 'dd-MM-yyyy')}">Card title</h4>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item"><span th:text="|${#temporals.hour(activity.dateTime)}:${#temporals.minute(activity.dateTime)}|"></span></li>
+                      <li class="list-group-item" th:text="${#temporals.format(activity.dateTime, 'dd-MM-yyyy')}">Card title</li>
+                    </ul>
+                  </div>
+                  <div class="card-footer">
+                    <a th:href="@{|/itinerary/${user.userName}/${iid}/${activity.id}/edit|}">Edit</a>
                   </div>
                 </div>
               </div>
@@ -143,7 +150,7 @@
         <!-- / Main Content -->
 
         <!-- Map Content -->
-          <div id="map" class="p-3 mb-2">
+          <div th:unless="${itinerary.getActivityList.size == 0}" id="map" class="p-3 mb-2">
             <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
               ({key: "AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg", v: "weekly"});</script>
           </div>

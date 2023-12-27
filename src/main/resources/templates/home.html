@@ -12,6 +12,7 @@
 
 <body>
   <main class="d-flex">
+  
     <!-- Side Navigation Bar -->
     <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark min-vh-100" style="width: 280px; position: fixed; left: 0px; right: 0px;">
       <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
@@ -69,23 +70,32 @@
       <!-- Empty Itinerary -->
 
       <div th:each="iti, iterStat : ${itineraries}">
-        <div class="card mb-3" style="max-width: 540px;">
+        <div class="card mb-3" style="max-width: 800px;">
+          
+          <!-- Row -->
           <div class="row g-0">
             <div class="col-md-4">
               <img
                 src="https://images.pexels.com/photos/1905054/pexels-photo-1905054.jpeg?cs=srgb&dl=pexels-loc-dang-1905054.jpg&fm=jpg"
                 class="img-fluid rounded-start" alt="...">
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8 card">
               <div class="card-body">
                 <h5 class="card-title" th:text="${iti.name}">Card title</h5>
                 <p class="card-text" th:text="${iti.description}"></p>
                 <p class="card-text"><small class="text-body-secondary" th:text="${iti.country}"></small></p>
+              </div>
+              <div class="card-footer">
+                <a th:href="@{'/itinerary/' + ${user.getUserName}} + '/' + ${iterStat.index + '/delete'}" 
+                  class="btn btn-outline-danger">Delete</a>
                 <a th:href="@{'/itinerary/' + ${user.getUserName}} + '/' + ${iterStat.index}"
-                  class="stretched-link"></a>
+                  class="btn btn-outline-success">Open</a>
               </div>
             </div>
+
           </div>
+          <!-- /Row -->
+
         </div>
       </div>
     </div>
@@ -106,11 +116,15 @@
           <div class="modal-body">
             <div class="input-group mb-1">
               <span class="input-group-text">Name</span>
-              <input type="text" name="name" class="form-control">
+              <input type="text" name="name" class="form-control" minlength="5" required>
             </div>
             <div class="input-group mb-1">
               <span class="input-group-text">Country</span>
-              <input type="text" name="country" class="form-control">
+              <!-- <input type="text" name="country" class="form-control" minlength="5"> -->
+              <select name="country" id="">
+                <option th:each="country: ${T(nus.iss.travlr.service.CountryService).country}" th:value="${country}" th:text="${country}"></option>
+              </select>
+
             </div>
             <div class="input-group">
               <span class="input-group-text">Description</span>
