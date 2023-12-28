@@ -18,3 +18,31 @@
     </script>
   </body>
 </html>
+
+<!-- Form -->
+<div class="card mx-auto mt-8 ">
+  <form class="card border-light-subtle body p-4" th:object="${user}" th:method="post" th:action="@{/login}">
+    <div th:if="${#fields.hasErrors('userName')}" class="alert alert-info alert-dismissible fade show" role="alert">
+      <div th:errors="*{userName}"></div>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div th:if="${#fields.hasErrors('password')}" class="alert alert-info alert-dismissible fade show" role="alert">
+      <div th:errors="*{password}"></div>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div class="input-group mb-1">
+      <span class="input-group-text" id="basic-addon1">@</span>
+      <input type="text" class="form-control" id="username" aria-label="Username" placeholder="Username"
+        th:field="*{userName}">
+    </div>
+    <div class="input-group mb-1">
+      <input type="password" class="form-control" id="password" placeholder="Password" th:field="*{password}">
+      <button class="btn btn-outline-primary" type="submit">Login</button>
+    </div>
+
+    <div class="row pt-1">
+      <a href="/register" class="text-center">Don't have an account?</a>
+    </div>
+  </form>
+</div>
+<!-- /Form -->

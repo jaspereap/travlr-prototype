@@ -92,7 +92,6 @@
               <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
                 <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#newItineraryForm">New itinerary...</button></li>
                 <li><a class="dropdown-item" href="#">Settings</a></li>
-                <li><a class="dropdown-item" href="#">Profile</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" th:href="@{/logout}">Sign out</a></li>
               </ul>
@@ -144,7 +143,8 @@
               </div>
               <div class="col-lg-9 p-0">
                 <div class="card mb-3 h-100">
-                  <img th:if="${activity.image}" th:src="@{${activity.image}}" class="card-img-top img-fluid" style="height: 150px; width: 100%;" alt="">
+                  <img th:if="${activity.image.length != 0}" th:src="@{${activity.image}}" class="card-img-top img-fluid" style="height: 150px; width: 100%;" alt="">
+                  <img th:unless="${activity.image.length != 0}" src="https://st4.depositphotos.com/17828278/24401/v/450/depositphotos_244011872-stock-illustration-image-vector-symbol-missing-available.jpg" class="card-img-top img-fluid" style="height: 150px; width: 100%;" alt="">
                   <div class="card-body">
                     <h5 class="card-title" th:text="${activity.location}"></h5>
                     <p class="card-text" th:text="${activity.remarks}"></p>
