@@ -1,18 +1,12 @@
 package nus.iss.travlr.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import javax.naming.Binding;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +19,7 @@ import nus.iss.travlr.model.Itinerary;
 import nus.iss.travlr.model.User;
 import nus.iss.travlr.service.AccountService;
 import nus.iss.travlr.service.SessionService;
-import nus.iss.travlr.service.TravlrService;
+import nus.iss.travlr.service.ItineraryService;
 
 @Controller
 @RequestMapping
@@ -36,7 +30,7 @@ public class ItineraryController {
     @Autowired
     private AccountService accSvc;
     @Autowired
-    private TravlrService travSvc;
+    private ItineraryService itiSvc;
 
     // Home page
     @GetMapping(path = "/home")
@@ -49,7 +43,7 @@ public class ItineraryController {
         User sessionUser = accSvc.getUser(sessionUserName);
         model.addAttribute("user", sessionUser);
         // Get all itineraries
-        Optional<List<Itinerary>> optItineraryList = travSvc.getItinerary(sessionUser.getUserName());
+        Optional<List<Itinerary>> optItineraryList = itiSvc.getItinerary(sessionUser.getUserName());
         if (optItineraryList.isPresent()) {
             model.addAttribute("itineraries", optItineraryList.get());
         }
@@ -72,7 +66,7 @@ public class ItineraryController {
         String userName = optUserName.get();
         User retrievedUser = accSvc.getUser(userName);
 
-        travSvc.addItinerary(retrievedUser.getUserName(), new Itinerary(name, country, description));
+        itiSvc.addItinerary(retrievedUser.getUserName(), new Itinerary(name, country, description));
 
         return "redirect:/home";
     }
@@ -94,7 +88,7 @@ public class ItineraryController {
         model.addAttribute("iid", iid);
         model.addAttribute("activity", new Activity());
 
-        travSvc.deleteItinerary(sessionUserName, iid);
+        itiSvc.deleteItinerary(sessionUserName, iid);
         return "redirect:/home";
     }
 }

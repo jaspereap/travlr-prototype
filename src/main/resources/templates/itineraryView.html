@@ -130,7 +130,8 @@
                     </ul>
                   </div>
                   <div class="card-footer">
-                    <a th:href="@{|/itinerary/${user.userName}/${iid}/${activity.id}/edit|}" class="btn btn-outline-secondary">Edit</a>
+                    <a th:href="@{|/itinerary/${user.userName}/${iid}/${activity.id}/delete|}" class="btn btn-outline-danger"><img th:src="@{/icons/delete_icon.svg}" alt=""></a>
+                    <a th:href="@{|/itinerary/${user.userName}/${iid}/${activity.id}/edit|}" class="btn btn-outline-secondary"><img th:src="@{/icons/settings_icon.svg}" alt=""></a>
                   </div>
                 </div>
               </div>
@@ -138,9 +139,9 @@
                 <div class="card mb-3 h-100">
                   <img th:if="${activity.image}" th:src="@{${activity.image}}" class="card-img-top img-fluid" style="height: 150px; width: 100%;" alt="">
                   <div class="card-body">
-                    <h5 class="card-title" th:text="${activity.location}">Card title</h5>
-                    <p class="card-text" th:text="${activity.remarks}">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                    <p class="card-text"><small class="text-body-secondary" th:text="${activity.formatted_address}">Last updated 3 mins ago</small></p>
+                    <h5 class="card-title" th:text="${activity.location}"></h5>
+                    <p class="card-text" th:text="${activity.remarks}"></p>
+                    <p class="card-text"><small class="text-body-secondary" th:text="${activity.formatted_address}"></small></p>
                   </div>
                 </div>
               </div>

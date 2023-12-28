@@ -7,7 +7,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" th:href="@{/styles/map.css}" />
     <script type="module" th:src="@{/scripts/map.js}"></script>
-
 </head>
 <body>
     <gmpx-api-loader key="AIzaSyBfDeiZXYBMzEIDLoAE8oEnpCbA1Lmf_rU" solution-channel="GMP_QB_addressselection_v3_cAB">
@@ -49,27 +48,51 @@
         <div style="margin-left: 280px;">
 
         </div>
-        <gmpx-api-loader key="AIzaSyBfDeiZXYBMzEIDLoAE8oEnpCbA1Lmf_rU" solution-channel="GMP_QB_addressselection_v3_cABC">
-        </gmpx-api-loader>
-        <gmpx-split-layout row-layout-min-width="600">
+
+        <gmpx-split-layout row-layout-min-width="300">
           <div class="panel" slot="fixed">
             <div>
-              <img class="sb-title-icon" src="https://fonts.gstatic.com/s/i/googlematerialicons/location_pin/v5/24px.svg" alt="">
+              <img class="sb-title-icon" th:src="${aid == null} ? @{/icons/location_icon.svg} : @{/icons/edit_icon.svg}" alt="">
               <h1 class="sb-title mb-2" th:if="${aid == null}">Address Selection</h1>
-              <h1 class="mb-2" th:if="${aid != null}">Editing activity</h1>
+              <h1 class="sb-title mb-2" th:if="${aid != null}">Editing activity</h1>
             </div>
-            <form th:action="@{'/itinerary/' + ${user.getUserName}} + '/' + ${iid} + '/add'" th:method="post" th:object="${activity}">
+            <!-- Form -->
+            <form class="needs-validation" th:action="@{'/itinerary/' + ${user.getUserName}} + '/' + ${iid} + '/add'" th:method="post" th:object="${activity}" novalidate>
                 <div class="input-group mb-2" th:if="${aid != null}">
                   <input type="text" class="form-control" th:value="${aid}" name="aid" hidden>
                 </div>
+
                 <div class="input-group mb-2">
-                    <input type="text" class="form-control" placeholder="Location Name" name="location" th:field="*{location}">
+                  <input  class="form-control"
+                          th:classappend="${#fields.hasErrors('location')} ? 'is-invalid' : (${submitted} ? 'is-valid' : '')"
+                          type="text" 
+                          placeholder="Location Name"
+                          name="location" 
+                          th:field="*{location}" 
+                          required>
+                  <small class="invalid-feedback" th:if="${#fields.hasErrors('location')}" th:errors="*{location}">error</small>
+                </div>
+
+                <div class="input-group mb-2">
+                    <input type="text" 
+                          class="form-control" 
+                          th:classappend="${#fields.hasErrors('address')} ? 'is-invalid' : (${submitted} ? 'is-valid' : '')"
+                          placeholder="Address" 
+                          name="address" 
+                          id="location-input" 
+                          th:field="*{address}"
+                          required>
+                    <small class="invalid-feedback" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">error</small>
                 </div>
                 <div class="input-group mb-2">
-                    <input type="text" class="form-control" placeholder="Address" name="address" id="location-input" th:field="*{address}">
-                </div>
-                <div class="input-group mb-2">
-                    <input type="datetime-local" class="form-control" placeholder="Date" name="datetime" th:field="*{dateTime}" required>
+                    <input type="datetime-local" 
+                          class="form-control" 
+                          th:classappend="${#fields.hasErrors('dateTime')} ? 'is-invalid' : (${submitted} ? 'is-valid' : '')"
+                          placeholder="Date" 
+                          name="datetime" 
+                          th:field="*{dateTime}" 
+                          required>
+                    <small class="invalid-feedback" th:if="${#fields.hasErrors('dateTime')}" th:errors="*{dateTime}">error</small>
                 </div>
                 <div class="input-group mb-2">
                     <input type="text" class="form-control" placeholder="Image URL" name="image" th:field="*{image}">
@@ -78,13 +101,18 @@
                     <textarea type="text" class="form-control" placeholder="Remarks" name="remarks" th:field="*{remarks}"></textarea>
                 </div>
                 <a th:href="@{'/itinerary/'+${user.getUserName}}+'/'+${iid}" class="btn btn-outline-danger">Cancel</a>
-                <button type="submit" class="btn btn-primary" th:if="${aid == null}">Create</button>
-                <button type="submit" class="btn btn-primary" th:if="${aid != null}">Confirm changes</button>
+                <button type="submit" class="btn btn-primary" th:text="${aid == null} ? 'Create' : 'Confirm changes'">Create</button>
+
+                <!-- <button type="submit" class="btn btn-primary" th:if="${aid == null}">Create</button> -->
+                <!-- <button type="submit" class="btn btn-primary" th:if="${aid != null}">Confirm changes</button> -->
             </form>
+            <!-- /Form -->
           </div>
+          <!-- Map -->
           <gmp-map slot="main">
             <gmp-advanced-marker></gmp-advanced-marker>
           </gmp-map>
+          <!-- /Map -->
         </gmpx-split-layout>
         
         <!-- / Main Content -->

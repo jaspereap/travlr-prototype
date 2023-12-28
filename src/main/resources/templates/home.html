@@ -122,7 +122,7 @@
               <span class="input-group-text">Country</span>
               <!-- <input type="text" name="country" class="form-control" minlength="5"> -->
               <select name="country" id="">
-                <option th:each="country: ${T(nus.iss.travlr.service.CountryService).country}" th:value="${country}" th:text="${country}"></option>
+                <option th:each="country: ${T(nus.iss.travlr.utility.CountryService).country}" th:value="${country}" th:text="${country}"></option>
               </select>
 
             </div>

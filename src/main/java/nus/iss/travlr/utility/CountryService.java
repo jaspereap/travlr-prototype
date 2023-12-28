@@ -1,4 +1,4 @@
-package nus.iss.travlr.service;
+package nus.iss.travlr.utility;
 
 public class CountryService {
     public static final String[] country = {"Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", 

@@ -9,7 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import nus.iss.travlr.repository.TravlrRepository;
 import nus.iss.travlr.repository.UserRepository;
-import nus.iss.travlr.service.TravlrService;
+import nus.iss.travlr.service.ItineraryService;
 
 @SpringBootApplication
 public class TravlrApplication implements CommandLineRunner {
@@ -21,7 +21,7 @@ public class TravlrApplication implements CommandLineRunner {
 	UserRepository userRepo;
 
 	@Autowired
-	TravlrService travSvc;
+	ItineraryService itiSvc;
 	@Autowired
 	TravlrRepository travRepo;
 
