@@ -28,8 +28,7 @@ import nus.iss.travlr.service.TravlrService;
 
 @Controller
 @RequestMapping
-public class TravlrController {
-
+public class ActivityController {
     @Autowired
     private SessionService sessSvc;
     @Autowired
@@ -37,50 +36,7 @@ public class TravlrController {
     @Autowired
     private TravlrService travSvc;
 
-    @GetMapping(path = "/home")
-    public String getHome(HttpSession session, Model model, RedirectAttributes redirectAttributes) {
- 
-        if (!sessSvc.isLoggedIn(session.getId())) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Please login first.");
-            return "redirect:/login";
-        }
-
-        String sessionUserName = sessSvc.getUserName(session.getId()).get();
-        User sessionUser = accSvc.getUser(sessionUserName);
-        model.addAttribute("user", sessionUser);
-
-        // Get all itineraries
-        Optional<List<Itinerary>> optItineraryList = travSvc.getItinerary(sessionUser.getUserName());
-        if (optItineraryList.isPresent()) {
-            model.addAttribute("itineraries", optItineraryList.get());
-        }
-        return "home";
-    }
-
-    // Create a new itinerary
-    @PostMapping(path = "/create")
-    public String postCreate(@RequestParam("name") String name,
-                            @RequestParam("country") String country, 
-                            @RequestParam("description") String description,
-                            Model model, HttpSession session, RedirectAttributes redirectAttributes) {
-
-        String currentSessionId = session.getId();
-        Optional<String> optUserName = sessSvc.getUserName(currentSessionId);
-        if (!optUserName.isPresent()) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Please login first.");
-            return "redirect:/login";
-        }
-        String userName = optUserName.get();
-        User retrievedUser = accSvc.getUser(userName);
-
-        // TODO add validations for adding itinerary
-
-        travSvc.addItinerary(retrievedUser.getUserName(), new Itinerary(name, country, description));
-
-        return "redirect:/home";
-    }
-
-    // Retrieve a specific itinerary for a user
+    // Get activities from an itinerary
     @GetMapping(path = "/itinerary/{userName}/{iid}")
     public String getItinerary(@PathVariable String userName, 
                                 @PathVariable Integer iid, 
@@ -95,7 +51,6 @@ public class TravlrController {
             redirectAttributes.addFlashAttribute("errorMessage", "Unauthorised!");
             return "redirect:/error";
         }
-        // Get itinerary
         Optional<List<Itinerary>> optItineraryList = travSvc.getItinerary(sessionUserName);
         if (optItineraryList.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage", "Unauthorised!");
@@ -114,7 +69,7 @@ public class TravlrController {
 
         return "itineraryView";
     }
-
+    // Get form for adding new activity
     @GetMapping(path = "/itinerary/{userName}/{iid}/add")
     public String getAddActivity(@PathVariable String userName, 
                                 @PathVariable Integer iid,
@@ -132,55 +87,7 @@ public class TravlrController {
         return "newActivity";
     }
 
-    // Delete itinerary
-    @GetMapping(path = "/itinerary/{userName}/{iid}/delete")
-    public String getActivity(@PathVariable String userName, 
-                                @PathVariable Integer iid,
-                                HttpSession session, RedirectAttributes redirectAttributes, Model model) {
-
-        if (!sessSvc.isLoggedIn(session.getId())) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Please login first.");
-            return "redirect:/login";
-        }
-        String sessionUserName = sessSvc.getUserName(session.getId()).get();
-        User sessionUser = accSvc.getUser(sessionUserName);
-        model.addAttribute("user", sessionUser);
-        model.addAttribute("userName", userName);
-        model.addAttribute("iid", iid);
-        model.addAttribute("activity", new Activity());
-
-        travSvc.deleteItinerary(sessionUserName, iid);
-        return "redirect:/home";
-    }
-
-    // Add activity to an itinerary for a specific user
-    @PostMapping(path = "/itinerary/{userName}/{iid}/add")
-    public String postAddActivity(@PathVariable String userName, 
-                                @PathVariable Integer iid,
-                                @RequestParam MultiValueMap<String,String> form,
-                                @ModelAttribute Activity activity,
-                                HttpSession session, RedirectAttributes redirectAttributes) {
-        if (!sessSvc.isLoggedIn(session.getId())) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Please login first.");
-            return "redirect:/login";
-        }
-
-        // TODO Validations for activity form
-
-        // If Edit exisiting activity
-        if (form.getFirst("aid") != null) {
-            // Debug
-            System.out.println("Editing activity");
-            String aid = form.getFirst("aid");
-            travSvc.updateActivity(userName, iid, aid, activity);
-            return "redirect:/itinerary/" + userName + "/" + iid;
-        }
-        Activity populatedActivity = travSvc.populateNewActivity(activity);
-        travSvc.addActivity(userName, iid, populatedActivity);
-
-        return "redirect:/itinerary/" + userName + "/" + iid;
-    }
-
+    // Get form for editing exisiting activity
     @GetMapping(path = "/itinerary/{userName}/{iid}/{aid}/edit")
     public String getEditActivity(@PathVariable String userName, 
                                 @PathVariable String iid,
@@ -207,7 +114,34 @@ public class TravlrController {
                 return "newActivity";
             }
         }
-
         return "error";
+    }
+
+    // Adds or Edits activity to an itinerary for a specific user
+    @PostMapping(path = "/itinerary/{userName}/{iid}/add")
+    public String postAddActivity(@PathVariable String userName, 
+                                @PathVariable Integer iid,
+                                @RequestParam MultiValueMap<String,String> form,
+                                @Valid @ModelAttribute Activity activity, BindingResult result,
+                                HttpSession session, RedirectAttributes redirectAttributes) {
+        if (!sessSvc.isLoggedIn(session.getId())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Please login first.");
+            return "redirect:/login";
+        }
+
+        // TODO Validations for activity form
+
+        // If Edit exisiting activity
+        if (form.getFirst("aid") != null) {
+            // Debug
+            System.out.println("Editing activity");
+            String aid = form.getFirst("aid");
+            travSvc.updateActivity(userName, iid, aid, activity);
+            return "redirect:/itinerary/" + userName + "/" + iid;
+        }
+        Activity populatedActivity = travSvc.populateNewActivity(activity);
+        travSvc.addActivity(userName, iid, populatedActivity);
+
+        return "redirect:/itinerary/" + userName + "/" + iid;
     }
 }

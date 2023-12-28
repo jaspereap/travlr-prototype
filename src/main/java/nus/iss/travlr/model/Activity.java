@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
 public class Activity {
     private String id;
     // From Form
+    @NotBlank
     private String location;
     private String address;
     private LocalDateTime dateTime;
