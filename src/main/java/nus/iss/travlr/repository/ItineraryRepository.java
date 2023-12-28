@@ -20,7 +20,7 @@ import nus.iss.travlr.model.Itinerary;
 import nus.iss.travlr.utility.TravlrUtility;
 
 @Repository
-public class TravlrRepository {
+public class ItineraryRepository {
     @Autowired @Qualifier("redisTemplate")
     private RedisTemplate<String, String> template;
 

@@ -37,6 +37,10 @@ public class ActivityService {
         actRepo.updateActivity(userName, iid, aid, populatedActivity);
     }
 
+    public boolean moveActivity(String userName, Integer iid, String aid, Integer offset) {
+        return actRepo.moveActivity(userName, iid, aid, offset);
+    }
+
     public Activity populateNewActivity(Activity activity) {
         // Add new activity
         activity.initialiseId();
@@ -66,8 +70,6 @@ public class ActivityService {
         // Call API with address
         JsonObject response = this.getAddressDetails(address);
         if (response == null) {
-            // Debug
-            System.out.println("API call failed");
             return activity;
         }
         String lat = response.getString("lat");
@@ -82,6 +84,7 @@ public class ActivityService {
     }
 
     public JsonObject getAddressDetails(String address) {
+        System.out.println("\t Calling Google API..");
         String url = GEOCODE_URL;
         String endpoint = UriComponentsBuilder
             .fromUriString(url)
@@ -89,7 +92,6 @@ public class ActivityService {
             .queryParam("address", address)
             .build()
             .toString();
-        System.out.println(endpoint);
 
         RestTemplate template = new RestTemplate();
         String response = template.getForObject(endpoint, String.class);
@@ -98,7 +100,6 @@ public class ActivityService {
         JsonObject responseObj = reader.readObject();
         String status = responseObj.getString("status");
         // Status Codes -> OK, ZERO_RESULTS, OVER_DAILY_LIMIT, OVER_QUERY_LIMIT, REQUEST_DENIED, INVALID_REQUEST, UNKNOWN_ERROR
-        System.out.println("Status: " + status);
         if (!status.equals("OK")) {
             return null;
         }

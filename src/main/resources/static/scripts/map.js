@@ -100,7 +100,8 @@ async function initMap() {
 
   const mapOptions = CONFIGURATION.mapOptions;
   mapOptions.mapId = mapOptions.mapId || 'DEMO_MAP_ID';
-  mapOptions.center = mapOptions.center || {lat: 37.4221, lng: -122.0841};
+  mapOptions.center = mapOptions.center || {lat: 1.3521, lng: 103.8198};
+  mapOptions.zoom = 10;
 
   await customElements.whenDefined('gmp-map');
   document.querySelector('gmp-map').innerMap.setOptions(mapOptions);

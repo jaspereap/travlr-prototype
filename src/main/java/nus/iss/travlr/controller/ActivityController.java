@@ -96,7 +96,6 @@ public class ActivityController {
                                 @PathVariable String iid,
                                 @PathVariable String aid,
                                 HttpSession session, RedirectAttributes redirectAttributes, Model model) {
-        System.out.println(userName + iid);
         if (!sessSvc.isLoggedIn(session.getId())) {
             redirectAttributes.addFlashAttribute("errorMessage", "Please login first.");
             return "redirect:/login";
@@ -111,7 +110,6 @@ public class ActivityController {
         Itinerary itinerary = itiSvc.getItinerary(sessionUserName).get().get(Integer.parseInt(iid));
         ArrayList<Activity> activityList = itinerary.getActivityList();
         for (Activity activity : activityList) {
-            System.out.println(activity.getId());
             if (activity.getId().equals(aid.toString())) {
                 model.addAttribute("activity", activity);
                 return "newActivity";
@@ -134,15 +132,11 @@ public class ActivityController {
         User sessionUser = accSvc.getUser(sessSvc.getUserName(session.getId()).get());
         model.addAttribute("user", sessionUser);
         if (result.hasErrors()) {
-            // return back form with error messages
-            System.out.println("Has error, returning newActivity page");
             model.addAttribute("submitted", true);
             return "newActivity";
         }
         // If Edit exisiting activity
         if (form.getFirst("aid") != null) {
-            // Debug
-            System.out.println("Editing activity");
             String aid = form.getFirst("aid");
             actSvc.updateActivity(userName, iid, aid, activity);
             return "redirect:/itinerary/" + userName + "/" + iid;
@@ -166,6 +160,34 @@ public class ActivityController {
         model.addAttribute("user", sessionUser);
 
         actSvc.deleteActivity(userName, iid, aid);
+        return "redirect:/itinerary/" + userName + "/" + iid;
+    }
+
+    // Move an activity
+    @GetMapping(path = "/itinerary/{userName}/{iid}/{aid}/move/{direction}")
+    public String getMoveActivity(@PathVariable String userName, 
+                                @PathVariable String iid,
+                                @PathVariable String aid,
+                                @PathVariable String direction,
+                                HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+        if (!sessSvc.isLoggedIn(session.getId())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Please login first.");
+            return "redirect:/login";
+        }
+        User sessionUser = accSvc.getUser(sessSvc.getUserName(session.getId()).get());
+        model.addAttribute("user", sessionUser);
+        Integer offset = 0;
+        if ("up".equals(direction)) {
+            offset = -1;
+        } else if ("down".equals(direction)) {
+            offset = 1;
+        } else {
+            return "error";
+        }
+        if (!actSvc.moveActivity(userName, Integer.parseInt(iid), aid, offset)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Activity cannot be moved!");
+            return "redirect:/itinerary/" + userName + "/" + iid;
+        }
         return "redirect:/itinerary/" + userName + "/" + iid;
     }
 }

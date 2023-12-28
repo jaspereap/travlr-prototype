@@ -67,8 +67,6 @@
     <!-- / Google Maps API script -->
 </head>
 <body>
-    <!-- <div th:each="x : ${itinerary.getActivityList}" th:text="${x.lat}"></div> -->
-
     <main class="d-flex">
       <!-- Side Navigation Bar -->
         <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark min-vh-100" style="width: 280px; position: fixed; left: 0px; right: 0px;">
@@ -104,24 +102,31 @@
         
         <!-- Main Content -->
         <div class="container-fluid" style="margin-left: 280px;">
-          <div th:object="${itinerary}">
-              <div class="m-3">
-                <h1 th:text="*{name}"></h1>
-                <small th:text="*{country}" class="ps-1"></small>
+          <div th:if="${errorMessage}" class="alert alert-info mt-2" role="alert">
+            <span th:text="${errorMessage}"></span>
+          </div>
+          <div th:object="${itinerary}" class="container mt-3">
+              <div class="card border-5">
+                <div class="card-body">
+                  <div class="row m-3 d-flex justify-content-between align-items-start">
+                    <h1 class="card-title" th:text="*{name}"></h1>
+                    <h3 class="card-subtitle text-muted" th:text="*{country}"></h3>
+                  </div>
+                  <h3 class="row m-5 card-text mt-3" th:text="*{description}" ></h3>
+                  <div class="row mt-3" th:if="${itinerary.getActivityList.size == 0}" >Your activity list is empty..</div>
+                  <a class="btn btn-outline-success m-3" th:href="@{'/itinerary/' + ${user.getUserName}} + '/' + ${iid} + '/add'"><img th:src="@{/icons/add_icon.svg}" alt=""></a>
+                </div>
               </div>
-
-              <h3 th:text="*{description}" class="m-3"></h3>
-              <div th:if="${itinerary.getActivityList.size == 0}" class="m-3">Your activity list is empty..</div>
-              <a class="btn btn-primary m-3" th:href="@{'/itinerary/' + ${user.getUserName}} + '/' + ${iid} + '/add'">Add</a>
-            </div>
+          </div>
             
           <div th:unless="${itinerary.getActivityList.size == 0}" th:each="activity, iterStat: ${itinerary.getActivityList}" class="m-3">
             <!-- Row -->
             <div class="row row-cols-1">
               <div class="col-lg-3 p-0">
                 <div class="card rounded h-100 text-center">
-                  <div class="card-header py-3">
-                    <h4 class="card-text" th:text="${#temporals.dayOfWeekNameShort(activity.dateTime)}">Card title</h4>
+                  <div class="card-header py-3 row">
+                    <h4 class="card-text col-5" th:text="'#'+${iterStat.index}">test</h4>
+                    <h4 class="card-text col-7 text-start" th:text="${#temporals.dayOfWeekNameShort(activity.dateTime)}">Card title</h4>
                   </div>
                   <div class="card-body">
                     <ul class="list-group list-group-flush">
@@ -132,6 +137,8 @@
                   <div class="card-footer">
                     <a th:href="@{|/itinerary/${user.userName}/${iid}/${activity.id}/delete|}" class="btn btn-outline-danger"><img th:src="@{/icons/delete_icon.svg}" alt=""></a>
                     <a th:href="@{|/itinerary/${user.userName}/${iid}/${activity.id}/edit|}" class="btn btn-outline-secondary"><img th:src="@{/icons/settings_icon.svg}" alt=""></a>
+                    <a th:href="@{|/itinerary/${user.userName}/${iid}/${activity.id}/move/up|}" class="btn btn-outline-secondary"><img th:src="@{/icons/up_icon.svg}" alt=""></a>
+                    <a th:href="@{|/itinerary/${user.userName}/${iid}/${activity.id}/move/down|}" class="btn btn-outline-secondary"><img th:src="@{/icons/down_icon.svg}" alt=""></a>
                   </div>
                 </div>
               </div>
@@ -153,7 +160,7 @@
         <!-- Map Content -->
           <div th:unless="${itinerary.getActivityList.size == 0}" id="map" class="p-3 mb-2">
             <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
-              ({key: "AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg", v: "weekly"});</script>
+              ({key: "AIzaSyBfDeiZXYBMzEIDLoAE8oEnpCbA1Lmf_rU", v: "weekly"});</script>
           </div>
         <!-- / Map Content -->
 

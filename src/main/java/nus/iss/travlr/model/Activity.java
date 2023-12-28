@@ -24,7 +24,7 @@ public class Activity {
     @Length(min=5, max=30, message="Name must be between 5 - 30 characters.")
     private String location;
     @NotBlank(message = "Please provide a valid address.")
-    @Length(min=5, max=60, message="Location must be between 5 - 60 characters.")
+    @Length(min=5, max=200, message="Location must be between 5 - 200 characters.")
     private String address;
     @NotNull(message="Please provide a valid date.")
     @Future(message="Date must be in the future")

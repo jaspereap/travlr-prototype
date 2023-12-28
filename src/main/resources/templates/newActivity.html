@@ -49,7 +49,7 @@
 
         </div>
 
-        <gmpx-split-layout row-layout-min-width="300">
+        <gmpx-split-layout row-layout-min-width="300" class="vh-100">
           <div class="panel" slot="fixed">
             <div>
               <img class="sb-title-icon" th:src="${aid == null} ? @{/icons/location_icon.svg} : @{/icons/edit_icon.svg}" alt="">
@@ -57,7 +57,7 @@
               <h1 class="sb-title mb-2" th:if="${aid != null}">Editing activity</h1>
             </div>
             <!-- Form -->
-            <form class="needs-validation" th:action="@{'/itinerary/' + ${user.getUserName}} + '/' + ${iid} + '/add'" th:method="post" th:object="${activity}" novalidate>
+            <form class="needs-validation justify-content-center" th:action="@{'/itinerary/' + ${user.getUserName}} + '/' + ${iid} + '/add'" th:method="post" th:object="${activity}" novalidate>
                 <div class="input-group mb-2" th:if="${aid != null}">
                   <input type="text" class="form-control" th:value="${aid}" name="aid" hidden>
                 </div>
@@ -101,7 +101,7 @@
                     <textarea type="text" class="form-control" placeholder="Remarks" name="remarks" th:field="*{remarks}"></textarea>
                 </div>
                 <a th:href="@{'/itinerary/'+${user.getUserName}}+'/'+${iid}" class="btn btn-outline-danger">Cancel</a>
-                <button type="submit" class="btn btn-primary" th:text="${aid == null} ? 'Create' : 'Confirm changes'">Create</button>
+                <button type="submit" class="btn btn-outline-success" th:text="${aid == null} ? 'Create' : 'Confirm changes'">Create</button>
 
                 <!-- <button type="submit" class="btn btn-primary" th:if="${aid == null}">Create</button> -->
                 <!-- <button type="submit" class="btn btn-primary" th:if="${aid != null}">Confirm changes</button> -->

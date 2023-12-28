@@ -53,19 +53,20 @@
     
     <!-- Main Content -->
     <div class="mt-1 container-fluid" style="margin-left: 280px;">
-
+      <div th:if="${errorMessage}" class="alert alert-info mt-2" role="alert">
+        <span th:text="${errorMessage}"></span>
+      </div>
       <!-- Empty Itinerary -->
       <div th:if="${itineraries == null || itineraries.size == 0}">
-  
         <div class="cover-container d-flex w-100 h-100 p-3 mx-auto row">
-  
           <main class="px-3">
             <h1>Looking kinda empty here.</h1>
             <p class="lead">Start by adding an itinerary</p>
+            <div class="d-flex justify-content-center">
+              <img width="600px" height="auto" class="img-fluid" src="https://www.dailypaws.com/thmb/JplNgE-ozTy983Q8Ye2PVw231UA=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/do-cats-cry-3-1370446355-2000-75d902230d36418d9ed8b43123b29481.jpg" alt="">
+            </div>
           </main>
-  
         </div>
-  
       </div>
       <!-- Empty Itinerary -->
 
@@ -79,20 +80,30 @@
                 src="https://images.pexels.com/photos/1905054/pexels-photo-1905054.jpeg?cs=srgb&dl=pexels-loc-dang-1905054.jpg&fm=jpg"
                 class="img-fluid rounded-start" alt="...">
             </div>
+            <!-- Itinerary Card -->
             <div class="col-md-8 card">
-              <div class="card-body">
-                <h5 class="card-title" th:text="${iti.name}">Card title</h5>
-                <p class="card-text" th:text="${iti.description}"></p>
-                <p class="card-text"><small class="text-body-secondary" th:text="${iti.country}"></small></p>
+              <!-- Body -->
+              <div class="card-body d-flex flex-column">
+                <h1 class="card-title m-4">
+                  <span><img th:src="@{/icons/chevright_icon.svg}" alt=""> </span><span th:text="${iti.name}"></span>
+                </h1>
+                <p class="card-text m-4">
+                  <span><img th:src="@{/icons/chevright_icon.svg}" alt=""> </span><span th:text="${iti.description}"></span>
+                </p>
+                <p class="card-text mt-auto">
+                  <span><img th:src="@{/icons/flag_icon.svg}" alt=""> </span><span class="text-body-secondary font-monospace" th:text="${iti.country}"></span>
+                </p>
               </div>
-              <div class="card-footer">
+              <!-- /Body -->
+              <!-- Footer -->
+              <div class="card-footer text-end">
                 <a th:href="@{'/itinerary/' + ${user.getUserName}} + '/' + ${iterStat.index + '/delete'}" 
-                  class="btn btn-outline-danger">Delete</a>
+                  class="btn btn-outline-danger"><img th:src="@{/icons/delete_icon.svg}" alt=""></a>
                 <a th:href="@{'/itinerary/' + ${user.getUserName}} + '/' + ${iterStat.index}"
-                  class="btn btn-outline-success">Open</a>
+                  class="btn btn-outline-success"><img th:src="@{/icons/open_icon.svg}" alt=""></a>
               </div>
+              <!-- /Footer -->
             </div>
-
           </div>
           <!-- /Row -->
 

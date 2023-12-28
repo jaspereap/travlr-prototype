@@ -42,7 +42,6 @@ public class AccountController {
         }
     
         if (!accSvc.hasUser(user.getUserName())) {
-            System.out.println("USER DOESN'T EXISTS!");
             FieldError err = new FieldError("user", "userName", "Login failed!");
             result.addError(err);
             return "login";
