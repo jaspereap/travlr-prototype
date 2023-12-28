@@ -94,11 +94,13 @@ public class ActivityService {
             .toString();
 
         RestTemplate template = new RestTemplate();
+        System.out.println("\tEnd-point: " + endpoint);
         String response = template.getForObject(endpoint, String.class);
 
         JsonReader reader = Json.createReader(new StringReader(response));
         JsonObject responseObj = reader.readObject();
         String status = responseObj.getString("status");
+        System.out.println("\tStatus: " + status);
         // Status Codes -> OK, ZERO_RESULTS, OVER_DAILY_LIMIT, OVER_QUERY_LIMIT, REQUEST_DENIED, INVALID_REQUEST, UNKNOWN_ERROR
         if (!status.equals("OK")) {
             return null;

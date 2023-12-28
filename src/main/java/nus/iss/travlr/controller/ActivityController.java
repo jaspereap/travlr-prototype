@@ -131,10 +131,21 @@ public class ActivityController {
         }
         User sessionUser = accSvc.getUser(sessSvc.getUserName(session.getId()).get());
         model.addAttribute("user", sessionUser);
+
         if (result.hasErrors()) {
+            System.out.println(result.getAllErrors());
+            // Debug
+            System.out.println("error fields");
             model.addAttribute("submitted", true);
+
+            if (form.getFirst("aid") != null) {
+                String aid = form.getFirst("aid");
+                model.addAttribute("aid", aid);
+                return "newActivity";
+            }
             return "newActivity";
         }
+
         // If Edit exisiting activity
         if (form.getFirst("aid") != null) {
             String aid = form.getFirst("aid");

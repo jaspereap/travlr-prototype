@@ -50,7 +50,9 @@ public class TravlrApplication implements CommandLineRunner {
 		System.out.println("\tApplication Started");
 		System.out.println("\tRedis running on " + redisHost + ":" + redisPort);
 		System.out.println("\tRedis credential: " + redisUsername + ":" + redisPassword);
-		System.out.println("\tAPI_KEY: " + API_KEY);
+		if (!API_KEY.isBlank()) {
+			System.out.println("\tAPI_KEY EXISTS");
+		}
 		System.out.println("\tGEOCODE_URL: " + GEOCODE_URL);
 	}
 

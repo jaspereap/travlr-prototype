@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
@@ -27,11 +28,12 @@ public class Activity {
     @Length(min=5, max=200, message="Location must be between 5 - 200 characters.")
     private String address;
     @NotNull(message="Please provide a valid date.")
-    @Future(message="Date must be in the future")
+    @Future(message="Date must be in the future.")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     private LocalDateTime dateTime;
-    @Length(max=100, message="Limited to 100 characters.")
+    @Length(max=200, message="Limited to 200 characters.")
     private String image;
-    @Length(max=100, message="Limited to 100 characters.")
+    @Length(max=200, message="Limited to 200 characters.")
     private String remarks;
     // From API
     private String lat = "";

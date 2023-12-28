@@ -57,7 +57,7 @@
               <h1 class="sb-title mb-2" th:if="${aid != null}">Editing activity</h1>
             </div>
             <!-- Form -->
-            <form class="needs-validation justify-content-center" th:action="@{'/itinerary/' + ${user.getUserName}} + '/' + ${iid} + '/add'" th:method="post" th:object="${activity}" novalidate>
+            <form class="needs-validation justify-content-center" th:action="@{'/itinerary/' + ${user.getUserName}} + '/' + ${iid} + '/add'" th:method="post" th:object="${activity}">
                 <div class="input-group mb-2" th:if="${aid != null}">
                   <input type="text" class="form-control" th:value="${aid}" name="aid" hidden>
                 </div>
@@ -90,12 +90,17 @@
                           th:classappend="${#fields.hasErrors('dateTime')} ? 'is-invalid' : (${submitted} ? 'is-valid' : '')"
                           placeholder="Date" 
                           name="datetime" 
-                          th:field="*{dateTime}" 
-                          required>
+                          th:field="*{dateTime}">
                     <small class="invalid-feedback" th:if="${#fields.hasErrors('dateTime')}" th:errors="*{dateTime}">error</small>
                 </div>
                 <div class="input-group mb-2">
-                    <input type="text" class="form-control" placeholder="Image URL" name="image" th:field="*{image}">
+                    <input type="text" 
+                          class="form-control" 
+                          th:classappend="${#fields.hasErrors('image')} ? 'is-invalid' : (${submitted} ? 'is-valid' : '')"
+                          placeholder="Image URL" 
+                          name="image" 
+                          th:field="*{image}">
+                    <small class="invalid-feedback" th:if="${#fields.hasErrors('image')}" th:errors="*{image}">error</small>
                 </div>
                 <div class="input-group mb-2">
                     <textarea type="text" class="form-control" placeholder="Remarks" name="remarks" th:field="*{remarks}"></textarea>

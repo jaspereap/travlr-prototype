@@ -95,7 +95,6 @@ public class ActivityRepository {
         int position = -1;
         for (int i = 0; i < activityList.size(); i++) {
             if (activityList.get(i).getId().equals(aid)) {
-                System.out.println("i: " + i + " size: " + activityList.size());
                 position = i;
             }
         }
