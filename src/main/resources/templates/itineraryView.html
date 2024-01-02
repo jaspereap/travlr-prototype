@@ -125,7 +125,7 @@
                 <div class="card rounded h-100 text-center">
                   <div class="card-header py-3 row">
                     <h4 class="card-text col-5" th:text="'#'+${iterStat.index}">test</h4>
-                    <h4 class="card-text col-7 text-start" th:text="${#temporals.dayOfWeekNameShort(activity.dateTime)}">Card title</h4>
+                    <h4 class="card-text col-7 text-start" th:text="${#temporals.dayOfWeekName(activity.dateTime)}">Card title</h4>
                   </div>
                   <div class="card-body">
                     <ul class="list-group list-group-flush">
