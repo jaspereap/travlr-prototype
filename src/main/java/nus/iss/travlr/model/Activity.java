@@ -31,7 +31,7 @@ public class Activity {
     @Future(message="Date must be in the future.")
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private LocalDateTime dateTime;
-    @Length(max=200, message="Limited to 200 characters.")
+    @Length(max=500, message="Limited to 500 characters.")
     private String image;
     @Length(max=200, message="Limited to 200 characters.")
     private String remarks;
