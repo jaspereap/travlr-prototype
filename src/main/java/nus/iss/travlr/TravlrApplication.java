@@ -49,9 +49,12 @@ public class TravlrApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		System.out.println("\tApplication Started");
 		System.out.println("\tRedis running on " + redisHost + ":" + redisPort);
-		System.out.println("\tRedis credential: " + redisUsername + ":" + redisPassword);
+		System.out.println("\tRedis username: " + redisUsername);
+		if (!redisPassword.isBlank()) {
+			System.out.println("\tSPRING_REDIS_PASSWORD EXISTS");
+		}
 		if (!API_KEY.isBlank()) {
-			System.out.println("\tAPI_KEY EXISTS");
+			System.out.println("\tGOOGLE_API_KEY EXISTS");
 		}
 		System.out.println("\tGEOCODE_URL: " + GEOCODE_URL);
 	}
