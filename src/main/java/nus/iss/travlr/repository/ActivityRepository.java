@@ -37,8 +37,6 @@ public class ActivityRepository {
             jab.add(iti.toJsonObject());
         }
         JsonArray jarr = jab.build();
-        // Debug
-        System.out.println("Packed Activity Array: " + jarr);
         template.opsForHash().put("main", userName, jarr.toString());
     }
 
